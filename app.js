@@ -133,11 +133,30 @@ function init(){
   loadDB();
   if(db.theme==="dark")document.documentElement.classList.add("dark");
 
-  $("addBtn")?.addEventListener("click",()=>openModal());
-  $("closeModal")?.addEventListener("click",closeModal);
-  $("cancelBtn")?.addEventListener("click",closeModal);
-  $("saveBtn")?.addEventListener("click",saveModal);
-  $("modal")?.addEventListener("click",e=>{if(e.target.id==="modal")closeModal()}); $("modal")?.addEventListener("click",e=>{if(e.target.closest("#closeModal,#cancelBtn")){e.preventDefault();e.stopPropagation();closeModal()}});
+  $("addBtn")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    openModal();
+  });
+
+  // 點擊右上角叉叉或取消按鈕關閉 Modal
+  $("closeModal")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    closeModal();
+  });
+
+  $("cancelBtn")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    closeModal();
+  });
+
+  $("saveBtn")?.addEventListener("click", saveModal);
+
+  // 點擊 Modal 外部黑影背景時關閉
+  $("modal")?.addEventListener("click", (e) => {
+    if (e.target.id === "modal") {
+      closeModal();
+    }
+  });
   $("search")?.addEventListener("input",render);
   $("categoryFilter")?.addEventListener("change",render);
   $("clearHistory")?.addEventListener("click",()=>{db.history={};saveDB();renderHistory()});
