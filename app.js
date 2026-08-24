@@ -1,91 +1,20 @@
-const BOOKS = [{"id": 1, "title": "某天成為魔神", "url": "https://www.baozimh.com/comic/moutianchengweimoshen-xuankunjueduiwudijingangbupi_58hyd3"}, {"id": 2, "title": "我獨自滿級新手", "url": "https://www.baozimh.com/comic/woduzimanjixinshou-maslowwanzswingbat_89a7te"}, {"id": 3, "title": "無限升級印武林", "url": "https://www.baozimh.com/comic/wuxianshengjiinwulin-gonboongkimjinwoo"}, {"id": 4, "title": "我獨自升級", "url": "https://www.baozimh.com/comic/woduzishengji-duburedicestudio_yfelsj"}, {"id": 5, "title": "與神一同升級", "url": "https://www.baozimh.com/comic/yushenyitongshengji-ohyeonbain_fm7oue"}, {"id": 6, "title": "絕對劍士", "url": "https://www.baozimh.com/comic/jueduijiangan-xianyueyekdrmti_9p8ljs"}, {"id": 7, "title": "殺手巴德洛", "url": "https://www.baozimh.com/comic/shashoubadeluo-jinzhengxianlimlina"}, {"id": 8, "title": "拳王歸來", "url": "https://www.baozimh.com/comic/quanwangguilai-liuchenxings2donax"}, {"id": 9, "title": "現實闖關", "url": "https://www.baozimh.com/comic/xianshichuangguan-joowoonleetaicheng"}, {"id": 10, "title": "公爵家的重生暗殺者", "url": "https://www.baozimh.com/comic/gongjuejiadezhongshenganshazhe-coffeelimeswingbatswingbat"}, {"id": 11, "title": "魔道轉生記", "url": "https://www.baozimh.com/comic/modaozhuanshengji-codezeroforcestudio_63oym3"}, {"id": 12, "title": "至活今天的輪迴騎士", "url": "https://www.baozimh.com/comic/zhihuojintiandelunhuiqishi-leehyunminiankanara"}, {"id": 13, "title": "絕對回歸", "url": "https://www.baozimh.com/comic/jueduihuigui-yhjangjppozhenhuan"}, {"id": 14, "title": "輪迴天魔", "url": "https://www.baozimh.com/comic/lunhuitianmo-jpbookyoumyhjang"}, {"id": 15, "title": "天才策士", "url": "https://www.baozimh.com/comic/tiancaicexieshi-zhenglongjinzhenshi"}, {"id": 16, "title": "重生傭兵王的復仇", "url": "https://www.baozimh.com/comic/zhongshengyongbingwangdefuchou-goldhaengjjjsss"}, {"id": 17, "title": "殘命天才生存法", "url": "https://www.baozimh.com/comic/canmingtiancaishengcunfa-jpblueseesawyoonc"}, {"id": 18, "title": "裝備我最強", "url": "https://www.baozimh.com/comic/zhuangbeiwozuiqiang-teamargomonohumbugredicestudiosaenalredicestudio_vqirjn"}, {"id": 19, "title": "劍尊歸來", "url": "https://www.baozimh.com/comic/jianzunguilai-bigalico_yq6j54"}];
-const STORAGE = 'mangaShelfV2_1';
-let state = {};
-try { state = JSON.parse(localStorage.getItem(STORAGE) || '{}') || {}; } catch(e) { state = {}; }
-let filter = 'all';
-
-const $ = (s) => document.querySelector(s);
-const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-function save(){ try{localStorage.setItem(STORAGE, JSON.stringify(state));}catch(e){} }
-function get(id){ return state[String(id)] || {}; }
-function isFav(id){ return !!get(id).fav; }
-
-function markRead(id){
-  state[String(id)] = {...get(id), last: Date.now()};
-  save();
-}
-
-function renderContinue(){
-  const ids = Object.entries(state)
-    .filter(([id,v]) => v && v.last && BOOKS.some(b => String(b.id) === id))
-    .sort((a,b) => b[1].last - a[1].last)
-    .slice(0,6);
-
-  const box = $('#continueList');
-  if(!ids.length){
-    box.innerHTML = '<div class="continue-card"><h3>還沒有閱讀紀錄</h3><p>點擊漫畫的「開始閱讀」後會出現在這裡。</p></div>';
-    return;
-  }
-  box.innerHTML = ids.map(([id]) => {
-    const b = BOOKS.find(x => String(x.id) === id);
-    return `<div class="continue-card">
-      <h3>${esc(b.title)}</h3>
-      <p>最近閱讀 · ${new Date(get(b.id).last).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</p>
-      <a class="mini-read" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer" data-read="${b.id}">繼續閱讀 ↗</a>
-    </div>`;
-  }).join('');
-  document.querySelectorAll('[data-read]').forEach(a => a.addEventListener('click',()=>markRead(a.dataset.read)));
-}
-
-function render(){
-  const q = $('#search').value.trim().toLowerCase();
-  const list = BOOKS.filter(b =>
-    (!q || b.title.toLowerCase().includes(q)) &&
-    (filter === 'all' || isFav(b.id))
-  );
-
-  $('#allCount').textContent = BOOKS.length;
-  $('#favCount').textContent = BOOKS.filter(b=>isFav(b.id)).length;
-  $('#result').textContent = `${list.length} 部`;
-
-  $('#grid').innerHTML = list.map(b => `
-    <article class="card">
-      <div class="cover">📖</div>
-      <h3>${esc(b.title)}</h3>
-      <div class="site">${b.url.includes('twmanga.com') ? 'TWMANGA' : 'Baozimh'}</div>
-      <div class="card-actions">
-        <a class="read" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer" data-read="${b.id}">開始閱讀 ↗</a>
-        <button class="star ${isFav(b.id)?'on':''}" type="button" data-fav="${b.id}" aria-label="收藏">${isFav(b.id)?'★':'☆'}</button>
-      </div>
-    </article>`).join('');
-
-  $('#empty').classList.toggle('hidden', list.length !== 0);
-
-  document.querySelectorAll('[data-fav]').forEach(btn => btn.addEventListener('click',()=>{
-    const id=btn.dataset.fav;
-    state[String(id)]={...get(id),fav:!isFav(id)};
-    save(); render();
-  }));
-  document.querySelectorAll('[data-read]').forEach(a=>a.addEventListener('click',()=>markRead(a.dataset.read)));
-  renderContinue();
-}
-
-document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  btn.classList.add('active');
-  filter=btn.dataset.filter;
-  render();
-}));
-
-$('#search').addEventListener('input',render);
-$('#theme').addEventListener('click',()=>{
-  document.documentElement.classList.toggle('dark');
-  localStorage.setItem('mangaThemeV21',document.documentElement.classList.contains('dark')?'dark':'light');
-});
-$('#clearHistory').addEventListener('click',()=>{
-  Object.keys(state).forEach(id=>{ if(state[id]) delete state[id].last; });
-  save(); render();
-});
-if(localStorage.getItem('mangaThemeV21')==='dark') document.documentElement.classList.add('dark');
-render();
+const DEFAULT_BOOKS=[{"id": 1, "title": "某天成為魔神", "url": "https://www.baozimh.com/comic/moutianchengweimoshen-xuankunjueduiwudijingangbupi_58hyd3", "category": "玄幻", "cover": ""}, {"id": 2, "title": "我獨自滿級新手", "url": "https://www.baozimh.com/comic/woduzimanjixinshou-maslowwanzswingbat_89a7te", "category": "熱血", "cover": ""}, {"id": 3, "title": "無限升級印武林", "url": "https://www.baozimh.com/comic/wuxianshengjiinwulin-gonboongkimjinwoo", "category": "武俠", "cover": ""}, {"id": 4, "title": "我獨自升級", "url": "https://www.baozimh.com/comic/woduzishengji-duburedicestudio_yfelsj", "category": "熱血", "cover": ""}, {"id": 5, "title": "與神一同升級", "url": "https://www.baozimh.com/comic/yushenyitongshengji-ohyeonbain_fm7oue", "category": "玄幻", "cover": ""}, {"id": 6, "title": "絕對劍士", "url": "https://www.baozimh.com/comic/jueduijiangan-xianyueyekdrmti_9p8ljs", "category": "武俠", "cover": ""}, {"id": 7, "title": "殺手巴德洛", "url": "https://www.baozimh.com/comic/shashoubadeluo-jinzhengxianlimlina", "category": "熱血", "cover": ""}, {"id": 8, "title": "拳王歸來", "url": "https://www.baozimh.com/comic/quanwangguilai-liuchenxings2donax", "category": "熱血", "cover": ""}, {"id": 9, "title": "現實闖關", "url": "https://www.baozimh.com/comic/xianshichuangguan-joowoonleetaicheng", "category": "冒險", "cover": ""}, {"id": 10, "title": "公爵家的重生暗殺者", "url": "https://www.baozimh.com/comic/gongjuejiadezhongshenganshazhe-coffeelimeswingbatswingbat", "category": "重生", "cover": ""}, {"id": 11, "title": "魔道轉生記", "url": "https://www.baozimh.com/comic/modaozhuanshengji-codezeroforcestudio_63oym3", "category": "玄幻", "cover": ""}, {"id": 12, "title": "至活今天的輪迴騎士", "url": "https://www.baozimh.com/comic/zhihuojintiandelunhuiqishi-leehyunminiankanara", "category": "冒險", "cover": ""}, {"id": 13, "title": "絕對回歸", "url": "https://www.baozimh.com/comic/jueduihuigui-yhjangjppozhenhuan", "category": "重生", "cover": ""}, {"id": 14, "title": "輪迴天魔", "url": "https://www.baozimh.com/comic/lunhuitianmo-jpbookyoumyhjang", "category": "玄幻", "cover": ""}, {"id": 15, "title": "天才策士", "url": "https://www.baozimh.com/comic/tiancaicexieshi-zhenglongjinzhenshi", "category": "武俠", "cover": ""}, {"id": 16, "title": "重生傭兵王的復仇", "url": "https://www.baozimh.com/comic/zhongshengyongbingwangdefuchou-goldhaengjjjsss", "category": "重生", "cover": ""}, {"id": 17, "title": "殘命天才生存法", "url": "https://www.baozimh.com/comic/canmingtiancaishengcunfa-jpblueseesawyoonc", "category": "冒險", "cover": ""}, {"id": 18, "title": "裝備我最強", "url": "https://www.baozimh.com/comic/zhuangbeiwozuiqiang-teamargomonohumbugredicestudiosaenalredicestudio_vqirjn", "category": "熱血", "cover": ""}, {"id": 19, "title": "劍尊歸來", "url": "https://www.baozimh.com/comic/jianzunguilai-bigalico_yq6j54", "category": "武俠", "cover": ""}];
+const KEY="mangaShelfV24";
+let db=load(),filter="all",editingId=null;
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||"null");if(x&&Array.isArray(x.books)&&x.books.length)return x}catch(e){}return{books:DEFAULT_BOOKS,records:{},favs:{},updates:{}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function book(id){return db.books.find(b=>String(b.id)===String(id))}
+function fav(id){return !!db.favs[id]}
+function mark(id){db.records[id]={last:Date.now()};save()}
+function renderContinue(){const a=Object.entries(db.records).filter(([id,v])=>v?.last&&book(id)).sort((x,y)=>y[1].last-x[1].last).slice(0,3);$("#continueList").innerHTML=a.length?a.map(([id,v])=>{const b=book(id);return `<div class="continueCard"><h3>${esc(b.title)}</h3><p>最近閱讀 · ${new Date(v.last).toLocaleDateString("zh-TW")}</p><a href="${esc(b.url)}" target="_blank" data-read="${id}">繼續閱讀 ↗</a></div>`}).join(""):'<div class="continueCard"><h3>還沒有閱讀紀錄</h3><p>點擊開始閱讀後會出現在這裡。</p></div>';document.querySelectorAll("[data-read]").forEach(x=>x.onclick=()=>mark(x.dataset.read))}
+function render(){const q=$("#search").value.trim().toLowerCase(),cat=$("#category").value;const list=db.books.filter(b=>(!q||b.title.toLowerCase().includes(q))&&(cat==="all"||b.category===cat)&&(filter==="all"||(filter==="fav"&&fav(b.id))||(filter==="new"&&db.updates[b.id])));$("#total").textContent=db.books.length;$("#favCount").textContent=Object.values(db.favs).filter(Boolean).length;$("#newCount").textContent=Object.values(db.updates).filter(Boolean).length;$("#count").textContent=list.length+" 部";$("#grid").innerHTML=list.map(b=>`<article class="card"><div class="cover">${b.cover?`<img src="${esc(b.cover)}" alt="${esc(b.title)}封面" onerror="this.remove()">`:"📖"}${db.updates[b.id]?'<span class="badge">NEW</span>':""}</div><div class="body"><h3>${esc(b.title)}</h3><div class="meta">${b.url.includes("twmanga")?"TWMANGA":"Baozimh"} · ${db.updates[b.id]?"🆕 有更新":"待檢查"}</div><span class="cat">${esc(b.category||"未分類")}</span><div class="actions"><a class="read" href="${esc(b.url)}" target="_blank" data-read="${b.id}">開始閱讀 ↗</a><button class="star ${fav(b.id)?"on":""}" data-fav="${b.id}">${fav(b.id)?"★":"☆"}</button><button class="edit" data-edit="${b.id}">✎</button></div></div></article>`).join("");$("#empty").classList.toggle("hidden",!!list.length);document.querySelectorAll("[data-fav]").forEach(x=>x.onclick=()=>{db.favs[x.dataset.fav]=!fav(x.dataset.fav);save();render()});document.querySelectorAll("[data-read]").forEach(x=>x.onclick=()=>mark(x.dataset.read));document.querySelectorAll("[data-edit]").forEach(x=>x.onclick=()=>openEdit(x.dataset.edit));renderContinue()}
+function openEdit(id){const b=book(id);if(!b)return;editingId=String(id);$("#titleInput").value=b.title;$("#urlInput").value=b.url;$("#coverInput").value=b.cover||"";$("#catInput").value=b.category||"熱血";$("#error").textContent="";$("#modal").classList.remove("hidden")}
+function closeModal(){$("#modal").classList.add("hidden")}
+document.querySelectorAll(".chip").forEach(x=>x.onclick=()=>{document.querySelectorAll(".chip").forEach(y=>y.classList.remove("active"));x.classList.add("active");filter=x.dataset.f;render()});
+$("#search").oninput=render;$("#category").onchange=render;$("#clear").onclick=()=>{db.records={};save();render()};
+$("#theme").onclick=()=>{document.documentElement.classList.toggle("dark");localStorage.setItem("mangaTheme24",document.documentElement.classList.contains("dark")?"dark":"light")};
+$("#close").onclick=closeModal;$("#cancel").onclick=closeModal;
+$("#save").onclick=()=>{const b=book(editingId),title=$("#titleInput").value.trim(),url=$("#urlInput").value.trim(),cover=$("#coverInput").value.trim();if(!title||!/^https?:\/\//i.test(url)){$("#error").textContent="請輸入漫畫名稱與完整網址。";return}if(cover&&!/^https?:\/\//i.test(cover)){$("#error").textContent="封面網址必須以 http:// 或 https:// 開頭。";return}b.title=title;b.url=url;b.cover=cover;b.category=$("#catInput").value;save();closeModal();render()};
+if(localStorage.getItem("mangaTheme24")==="dark")document.documentElement.classList.add("dark");render();
