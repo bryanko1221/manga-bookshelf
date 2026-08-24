@@ -12,17 +12,17 @@
 <section class="toolbar">
 <label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜尋漫畫…" autocomplete="off"></label>
 <div class="tabs"><button class="tab active" data-filter="all">全部 <b id="allCount"></b></button><button class="tab" data-filter="fav">⭐ 收藏 <b id="favCount"></b></button></div>
-<select id="categoryFilter" class="category-filter"><option value="all">全部分類</option><option>熱血</option><option>玄幻</option><option>重生</option><option>無敵</option><option>冒險</option><option>其他</option></select><button id="addBtn" class="add">＋ 新增漫畫</button>
+<select id="categoryFilter" class="category-filter"><option value="all">全部分類</option><option>熱血</option><option>玄幻</option><option>重生</option><option>無敵</option><option>冒險</option><option>其他</option></select><button type="button" id="addBtn" class="add" onclick="openModal();return false;">＋ 新增漫畫</button>
 </section>
 <section><div class="section-title"><h2>📚 我的書櫃</h2><span id="result"></span></div><div id="grid" class="grid"></div><div id="empty" class="empty hidden">找不到符合條件的漫畫。</div></section>
 </main>
 
 <div id="modal" class="modal hidden"><div class="modal-box">
-<div class="modal-head"><h2 id="modalTitle">新增漫畫</h2><button type="button" id="closeModal" aria-label="關閉">×</button></div>
+<div class="modal-head"><h2 id="modalTitle">新增漫畫</h2><button type="button" id="closeModal" aria-label="關閉" onclick="closeModal();return false;">×</button></div>
 <label>漫畫名稱<input id="titleInput" placeholder="例如：我獨自升級"></label>
 <label>漫畫網址<input id="urlInput" type="url" placeholder="https://..."></label>
-<label>封面圖片網址<input id="coverInput" type="url" placeholder="https://...jpg / png / webp"></label><label>分類<select id="catInput"><option>未分類</option><option>熱血</option><option>玄幻</option><option>重生</option><option>無敵</option><option>冒險</option><option>其他</option></select></label>
-<div class="modal-actions"><button type="button" id="cancelBtn" class="secondary">取消</button><button type="button" id="saveBtn" class="primary">儲存</button></div>
+<label>封面圖片網址<input id="coverInput" type="url" placeholder="https://...jpg / png / webp"></label><label>分類<select id="catInput"><option>其他</option><option>熱血</option><option>玄幻</option><option>重生</option><option>無敵</option><option>冒險</option><option>其他</option></select></label>
+<div class="modal-actions"><button type="button" id="cancelBtn" class="secondary" onclick="closeModal();return false;">取消</button><button type="button" id="saveBtn" class="primary" onclick="saveModal();return false;">儲存</button></div>
 <p id="modalError" class="error"></p>
 </div></div>
 <footer>V2.2 · 書櫃只保存名稱、連結、分類與本機閱讀紀錄，不保存第三方漫畫內容。</footer>

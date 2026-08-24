@@ -82,7 +82,7 @@ function render(){
   renderHistory();
 }
 
-function openModal(id=null){
+window.openModal=function(id=null){
   editingId=id?String(id):null;
   $("modalTitle").textContent=id?"編輯漫畫":"新增漫畫";
   $("modalError").textContent="";
@@ -101,7 +101,7 @@ function openModal(id=null){
   $("modal").classList.remove("hidden");
   setTimeout(()=>$("titleInput")?.focus(),50);
 }
-function closeModal(){$("modal").classList.add("hidden");editingId=null}
+window.closeModal=function(){$("modal").classList.add("hidden");editingId=null}
 function deleteBook(id){
   const b=getBook(id);
   if(!b)return;
@@ -111,7 +111,7 @@ function deleteBook(id){
   saveDB();render();
 }
 
-function saveModal(){
+window.saveModal=function(){
   const title=$("titleInput").value.trim();
   const url=$("urlInput").value.trim();
   const cover=$("coverInput").value.trim();
