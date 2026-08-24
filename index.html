@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>我的漫畫書櫃 V2.1 優化版</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div>
+      <small>MY MANGA LIBRARY</small>
+      <h1>我的漫畫書櫃</h1>
+      <p>19 部漫畫 · 搜尋 · 收藏 · 最近閱讀 · 封面</p>
+    </div>
+    <button id="themeBtn" class="round">☾</button>
+  </div>
+</header>
+
+<main>
+  <section class="stats">
+    <div><b id="total">19</b><span>漫畫</span></div>
+    <div><b id="favTotal">0</b><span>收藏</span></div>
+    <div><b id="recentTotal">0</b><span>閱讀紀錄</span></div>
+  </section>
+
+  <section id="recentSection" class="recentSection">
+    <div class="sectionHead"><h2>🕘 繼續閱讀</h2><button id="clearRecent">清除紀錄</button></div>
+    <div id="recentList" class="recentList"></div>
+  </section>
+
+  <section class="toolbar">
+    <input id="search" type="search" placeholder="🔍 搜尋漫畫名稱…">
+    <div class="filters">
+      <button class="filter active" data-filter="all">全部 19</button>
+      <button class="filter" data-filter="fav">⭐ 收藏</button>
+      <select id="category"><option value="all">全部分類</option><option>熱血</option><option>玄幻</option><option>武俠</option><option>重生</option><option>冒險</option></select>
+    </div>
+  </section>
+
+  <div class="sectionHead">
+    <h2>📚 我的書櫃</h2>
+    <span id="resultCount">19 部</span>
+  </div>
+  <section id="grid" class="grid"></section>
+  <div id="empty" class="empty hidden">找不到符合條件的漫畫。</div>
+</main>
+
+<footer>V2.1 優化版 · 核心書單固定 19 部。漫畫內容由原網站提供，本網站只保存書單與連結。</footer>
+<script src="app.js"></script>
+</body>
+</html>
