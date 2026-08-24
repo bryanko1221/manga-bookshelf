@@ -117,14 +117,14 @@ function saveModal(){
   const cover=$("coverInput").value.trim();
   const category=$("catInput").value||"其他";
   if(!title){$("modalError").textContent="請輸入漫畫名稱。";return}
-  if(!/^https?:\/\//i.test(url)){$("modalError").textContent="漫畫網址必須以 http:// 或 https:// 開頭。";return}
-  if(cover&&!/^https?:\/\//i.test(cover)){$("modalError").textContent="封面網址格式不正確。";return}
+  const cleanUrl=url.replace(/[\u200B-\u200D\uFEFF]/g,""); let parsedUrl; try{parsedUrl=new URL(cleanUrl)}catch(e){parsedUrl=null} if(!parsedUrl||!/^https?:$/.test(parsedUrl.protocol)){$("modalError").textContent="漫畫網址必須以 http:// 或 https:// 開頭。";return}
+  const cleanCover=cover.replace(/[\u200B-\u200D\uFEFF]/g,""); if(cleanCover){try{const cu=new URL(cleanCover); if(!/^https?:$/.test(cu.protocol))throw new Error()}catch(e){$("modalError").textContent="封面網址格式不正確。";return}}
   if(editingId){
     const b=getBook(editingId);
-    if(b)Object.assign(b,{title,url,cover,category});
+    if(b)Object.assign(b,{title,url:cleanUrl,cover:cleanCover,category});
   }else{
     const next=db.books.reduce((m,b)=>Math.max(m,Number(b.id)||0),0)+1;
-    db.books.push({id:next,title,url,cover,category});
+    db.books.push({id:next,title,url:cleanUrl,cover:cleanCover,category});
   }
   saveDB();closeModal();render();
 }
@@ -137,7 +137,7 @@ function init(){
   $("closeModal")?.addEventListener("click",closeModal);
   $("cancelBtn")?.addEventListener("click",closeModal);
   $("saveBtn")?.addEventListener("click",saveModal);
-  $("modal")?.addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+  $("modal")?.addEventListener("click",e=>{if(e.target.id==="modal")closeModal()}); $("modal")?.addEventListener("click",e=>{if(e.target.closest("#closeModal,#cancelBtn")){e.preventDefault();e.stopPropagation();closeModal()}});
   $("search")?.addEventListener("input",render);
   $("categoryFilter")?.addEventListener("change",render);
   $("clearHistory")?.addEventListener("click",()=>{db.history={};saveDB();renderHistory()});
