@@ -1,26 +1,9 @@
-# 我的漫畫書櫃
+# 我的漫畫書櫃 V2
+手機優先的漫畫書櫃：搜尋、收藏、最近閱讀、深色模式、原始網站連結。
+不保存第三方漫畫圖片或內容。
 
-這是一個純前端 GitHub Pages 網站：
-- 保存漫畫名稱與原始閱讀連結
-- 收藏功能
-- 搜尋
-- 閱讀進度記錄（存在使用者自己的瀏覽器 localStorage）
-- 深色模式
-- 手機版介面
-- 不下載、不保存漫畫圖片或漫畫內容
-
-## 部署到 GitHub Pages
-
-1. 在 GitHub 建立一個新的 repository，例如 `manga-bookshelf`。
-2. 把 `index.html`、`styles.css`、`app.js` 上傳到 repository 根目錄。
-3. 到 `Settings` → `Pages`。
-4. Source 選 `Deploy from a branch`。
-5. Branch 選 `main`、資料夾選 `/ (root)`。
-6. 儲存後等待 GitHub Pages 部署完成。
+## GitHub Pages
+Repository → Settings → Pages → Deploy from a branch → main → /(root) → Save。
 
 ## 新增漫畫
-
-打開 `app.js`，找到 `const BOOKS = [...]`，依照現有格式新增：
-`{"id": 20, "title": "漫畫名稱", "url": "https://...", "favorite": false, "progress": ""}`
-
-注意：網站只作為書櫃與連結入口，不保存第三方網站的漫畫圖片或內容。
+修改 `app.js` 的 `BOOKS` 陣列即可。

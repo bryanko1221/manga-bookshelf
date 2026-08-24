@@ -1,40 +1,9 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#111827">
-  <title>我的漫畫書櫃</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <header class="topbar">
-    <div>
-      <div class="eyebrow">PERSONAL MANGA SHELF</div>
-      <h1>我的漫畫書櫃</h1>
-      <p>集中管理你的漫畫連結，點擊後前往原網站閱讀。</p>
-    </div>
-    <button id="themeBtn" class="icon-btn" aria-label="切換深色模式">◐</button>
-  </header>
-
-  <main class="container">
-    <section class="controls">
-      <input id="search" type="search" placeholder="搜尋漫畫名稱…" autocomplete="off">
-      <div class="chips">
-        <button class="chip active" data-filter="all">全部 <span id="countAll"></span></button>
-        <button class="chip" data-filter="favorite">收藏 <span id="countFav"></span></button>
-      </div>
-    </section>
-
-    <section id="bookshelf" class="grid" aria-live="polite"></section>
-    <div id="empty" class="empty hidden">找不到符合條件的漫畫。</div>
-  </main>
-
-  <footer>
-    <span>共 <b id="footerCount">0</b> 部</span>
-    <span>書櫃只保存名稱、閱讀連結與你的閱讀進度，不保存漫畫內容。</span>
-  </footer>
-
-  <script src="app.js"></script>
-</body>
-</html>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><meta name="apple-mobile-web-app-capable" content="yes"><title>我的漫畫書櫃</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="hero"><div class="hero-inner"><div><div class="kicker">MY MANGA LIBRARY</div><h1>我的漫畫書櫃</h1><p>收藏、搜尋、繼續閱讀，一個頁面管理你的漫畫連結。</p></div><button id="theme" class="round">☾</button></div></header>
+<main>
+<section class="continue" id="continueSection"><div class="section-title"><h2>🕘 繼續閱讀</h2><button id="clearHistory" class="text-btn">清除紀錄</button></div><div id="continueList" class="continue-list"></div></section>
+<section class="toolbar"><div class="search"><span>⌕</span><input id="search" placeholder="搜尋漫畫…" /></div><div class="tabs"><button class="tab active" data-filter="all">全部 <b id="allCount"></b></button><button class="tab" data-filter="fav">⭐ 收藏 <b id="favCount"></b></button></div></section>
+<section><div class="section-title"><h2>📚 我的書櫃</h2><span id="result"></span></div><div id="grid" class="grid"></div><div id="empty" class="empty hidden">找不到符合條件的漫畫。</div></section>
+</main>
+<footer>書櫃僅保存漫畫名稱、閱讀連結與你的閱讀紀錄，不保存第三方漫畫內容。</footer>
+<script src="app.js"></script></body></html>
