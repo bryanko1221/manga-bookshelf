@@ -152,8 +152,13 @@ function init(){
   $("saveBtn")?.addEventListener("click", saveModal);
 
   // 點擊 Modal 外部黑影背景時關閉
+  // 直接對全域 Modal 監聽點擊，不管點到哪個關閉按鈕都能觸發
   $("modal")?.addEventListener("click", (e) => {
-    if (e.target.id === "modal") {
+    const isCloseBtn = e.target.closest("#closeModal, #cancelBtn");
+    const isOuterOverlay = e.target.id === "modal";
+
+    if (isCloseBtn || isOuterOverlay) {
+      e.preventDefault();
       closeModal();
     }
   });
